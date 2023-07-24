@@ -14,20 +14,13 @@ sequelize
     console.error("Unable to connect to the database: ", error);
   });
 
-const Book = sequelize.define("books", {
-  title: {
+const Users = sequelize.define("Users", {
+  name: {
     type: DataTypes.STRING,
-    allowNull: false,
   },
-  author: {
+
+  password: {
     type: DataTypes.STRING,
-    allowNull: false,
-  },
-  release_date: {z
-    type: DataTypes.DATEONLY,
-  },
-  subject: {
-    type: DataTypes.INTEGER,
   },
 });
 
