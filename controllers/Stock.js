@@ -7,6 +7,7 @@ export const getStockData = async (req, res) => {
 	if (req.headers.hasOwnProperty("authorization")) {
 		const token = req.headers.authorization.split(" ")[1]; //get token from header
 		const stock = await Stock.findAll(); // get stock info
+		// console.log(token);
 		if (token) {
 			//verify token
 			jwt.verify(token, "abc", function (err, decoded) {
@@ -14,12 +15,13 @@ export const getStockData = async (req, res) => {
 					res.json({ ok: false }); // if error exit return false
 				} else {
 					res.json(stock);
-					// console.log(token);
+					console.log(token);
 				}
 			});
 		}
 	} else {
 		res.json({ ok: false });
+		// console.log("abc");
 	}
 
 	// }

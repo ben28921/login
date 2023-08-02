@@ -12,5 +12,5 @@ const Users = db.define("Users", {
 		type: DataTypes.STRING,
 	},
 });
-
+await Users.sync();
 export default Users;
