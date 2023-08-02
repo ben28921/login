@@ -1,19 +1,22 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
-//User data model
+//stock data model
 const { DataTypes } = Sequelize;
 
-const Users = db.define("Users", {
-	name: {
+const Draw = db.define("Draw", {
+	uid: {
 		type: DataTypes.STRING,
 	},
 
-	password: {
+	date: {
 		type: DataTypes.STRING,
 	},
-	salt: {
+	no: {
+		type: DataTypes.STRING,
+	},
+	sno: {
 		type: DataTypes.STRING,
 	},
 });
-await Users.sync();
-export default Users;
+await Draw.sync();
+export default Draw;

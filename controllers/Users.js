@@ -34,6 +34,24 @@ export const Login = async (req, res) => {
 	// }
 
 	//ver 2 code
+	// try {
+	// 	const user = await Users.findAll({
+	// 		where: {
+	// 			name: req.body.name,
+	// 		},
+	// 	});
+
+	// 	const match = await bcrypt.compare(req.body.password, user[0].password);
+	// 	console.log(req.body.password);
+	// 	if (!match) return res.json({ ok: false });
+	// 	const token = jwt.sign({ id: user[0].id, name: user[0].name }, "abc", {
+	// 		expiresIn: "15s",
+	// 	});
+	// 	res.json({ ok: true, token });
+	// } catch (error) {
+	// 	res.json({ ok: false });
+
+	//ver 3 code
 	try {
 		const user = await Users.findAll({
 			where: {
@@ -41,13 +59,16 @@ export const Login = async (req, res) => {
 			},
 		});
 
-		const match = await bcrypt.compare(req.body.password, user[0].password);
-		console.log(req.body.password);
-		if (!match) return res.json({ ok: false });
-		const token = jwt.sign({ id: user[0].id, name: user[0].name }, "abc", {
-			expiresIn: "15s",
-		});
-		res.json({ ok: true, token });
+		// const match = await bcrypt.compare(req.body.password, user[0].password);
+		const hashPassword = await bcrypt.hash(req.body.password, user[0].salt);
+
+		if (hashPassword === user[0].password) {
+			const token = jwt.sign({ id: user[0].id, name: user[0].name }, "abc", {
+				expiresIn: "15s",
+			});
+			res.json({ ok: true, token });
+		}
+		// if (!match) return res.json({ ok: false });
 	} catch (error) {
 		res.json({ ok: false });
 	}
@@ -61,9 +82,16 @@ export const Signup = async (req, res) => {
 		await Users.create({
 			name: name,
 			password: hashPassword,
+			salt: salt,
 		});
 		res.json({ ok: true });
 	} catch (error) {
 		console.log(error);
 	}
+};
+
+export const changeUser = async (req, res) => {
+	const user = await Users.findOne({ where: { id: req.body.id } });
+	user.set({ password: req.body.password });
+	await user.save();
 };
