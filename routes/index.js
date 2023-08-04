@@ -1,7 +1,11 @@
 import express from "express";
-import { Login, Signup } from ".././controllers/Users.js";
+import { Login, Signup, changePassword } from ".././controllers/Users.js";
 import { getStockData, getStockDataP } from ".././controllers/Stock.js";
-import { getLuckyDraw, getLuckyDrawP } from "../controllers/draw.js";
+import {
+	getLuckyDraw,
+	getLuckyDrawDate,
+	getLuckyDrawP,
+} from "../controllers/draw.js";
 
 const router = express.Router();
 
@@ -11,5 +15,7 @@ router.get("/draw", getLuckyDraw);
 router.get("/drawP", getLuckyDrawP);
 router.post("/login", Login);
 router.post("/signUp", Signup);
+router.put("/changePassword", changePassword);
+router.get("/getLuckyDrawDate", getLuckyDrawDate);
 
 export default router;
