@@ -169,6 +169,11 @@ export const getLuckyDrawP = async (req, res) => {
 				a = num.no.split("+");
 				num.Number = a;
 			});
+			// if(){
+			// 	jsonP=jsonData.slice(req.query.sday, req.query.eday);
+			// }else if (){
+
+			// }else()
 			jsonP = jsonData.slice(req.query.sday, req.query.eday);
 			// jsonP = jsonData.slice(0, 3);
 			// for (let i in jsonData) {
