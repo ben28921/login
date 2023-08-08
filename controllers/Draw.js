@@ -1,42 +1,85 @@
 import axios from "axios";
 import { json } from "sequelize";
 import Draw from "../models/DrawModel.js";
+import jwt from "jsonwebtoken";
 
 export const getLuckyDraw = async (req, res) => {
+	// if (req.headers.hasOwnProperty("authorization")) {
+	// 	const token = req.headers.authorization.split(" ")[1]; //get token from header
+	// 	const stock = await Stock.findAll(); // get stock info
+	// 	// console.log(token);
+	// 	if (token) {
+	// 		//verify token
+	// 		jwt.verify(token, "abc", function (err, decoded) {
+	// 			if (err) {
+	// 				res.json({ ok: false }); // if error exit return false
+	// 			} else {
+	// 				res.json(stock);
+	// 				console.log(token);
+	// 			}
+	// 		});
+	// 	}
+	// } else {
+	// 	res.json({ ok: false });
+	// 	// console.log("abc");
+	// }
+
 	let a = [];
 	let jsonP = [];
-	let data = await axios
-		.get("https://bet.hkjc.com/contentserver/jcbw/cmc/last30draw.json") // get six mark result
-		.then((data) => {
-			const jsonData = data.data;
-			// jsonData.forEach((element) => {
-			// 	// console.log(element.no);
-			// 	a = [];
-			// 	// console.log(element.no.split("+"));
-			// 	a = element.no.split("+");
-			// 	// data.data.push({ a: a });
-			// 	data.data.Number = a;
-			// 	// console.log(data.data.id);
-			// 	console.log("a", data.data.Number);
-			// 	// jsonData.map((i) => (i.Number = a));
-			// });
+	let header = req.get("authorization");
+	// console.log(req.get("authorization"));
+	console.log("header", header);
+	if (header) {
+		const token = req.get("authorization").split(" ")[1];
 
-			jsonData.map((num) => {
-				a = num.no.split("+");
-				num.Number = a;
+		let data = await axios
+			.get("https://bet.hkjc.com/contentserver/jcbw/cmc/last30draw.json") // get six mark result
+			.then((data) => {
+				const jsonData = data.data;
+				// jsonData.forEach((element) => {
+				// 	// console.log(element.no);
+				// 	a = [];
+				// 	// console.log(element.no.split("+"));
+				// 	a = element.no.split("+");
+				// 	// data.data.push({ a: a });
+				// 	data.data.Number = a;
+				// 	// console.log(data.data.id);
+				// 	console.log("a", data.data.Number);
+				// 	// jsonData.map((i) => (i.Number = a));
+				// });
+
+				jsonData.map((num) => {
+					a = num.no.split("+");
+					num.Number = a;
+				});
+				jsonP = jsonData.slice(0, req.query.day);
+
+				console.log(req.query.day);
+				console.log("len", jsonP.length);
+				// res.json({ ok: true, data: data.data });
+				// res.json({ ok: true, data: jsonP });
+				// console.log(data.data[0]);
+			})
+			.catch((err) => {
+				res.json({ ok: false });
+				console.log(err);
 			});
-			jsonP = jsonData.slice(0, req.query.day);
-
-			console.log(req.query.day);
-			console.log("len", jsonP.length);
-			// res.json({ ok: true, data: data.data });
-			res.json({ ok: true, data: jsonP });
-			// console.log(data.data[0]);
-		})
-		.catch((err) => {
-			res.json({ ok: false });
-			console.log(err);
-		});
+		if (token) {
+			//verify token
+			jwt.verify(token, "abc", function (err, decoded) {
+				if (err) {
+					res.json({ ok: false }); // if error exit return false
+					console.log("token fail", token);
+				} else {
+					res.json({ ok: true, data: jsonP });
+					console.log("token", token);
+				}
+			});
+		}
+	} else {
+		res.json({ ok: false });
+		console.log("abc,false");
+	}
 	// console.log(JSON.stringify(data));
 	// console.log(data);
 	// console.log(data);
