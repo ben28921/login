@@ -66,7 +66,7 @@ export const Login = async (req, res) => {
 		if (hashPassword === user[0].password) {
 			// create token
 			const token = jwt.sign({ id: user[0].id, name: user[0].name }, "abc", {
-				expiresIn: "15s",
+				expiresIn: "60s",
 			});
 			res.json({ ok: true, token });
 		} else {
