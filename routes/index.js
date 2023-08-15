@@ -6,7 +6,7 @@ import {
 	getLuckyDraw,
 	getLuckyDrawDate,
 	getLuckyDrawP,
-} from "../controllers/draw.js";
+} from "../controllers/Draw.js";
 
 const router = express.Router();
 
